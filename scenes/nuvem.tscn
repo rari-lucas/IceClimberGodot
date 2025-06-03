@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dd7ma548477t4"]
+
+[ext_resource type="Script" uid="uid://caq8ingvny12p" path="res://scripts/nuvem.gd" id="1_ns4gr"]
+[ext_resource type="Texture2D" uid="uid://c82q6iftu0aa3" path="res://assets/cloudSprite.png" id="1_r2775"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_50r28"]
+size = Vector2(36, 8)
+
+[node name="Nuvem" type="CharacterBody2D"]
+scale = Vector2(4, 4)
+collision_layer = 2
+script = ExtResource("1_ns4gr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_r2775")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_50r28")
+one_way_collision = true

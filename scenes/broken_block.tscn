@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://cdo8atmbppgrb"]
+
+[ext_resource type="Texture2D" uid="uid://cpisp8lddnv6o" path="res://assets/blocks.png" id="1_7cud7"]
+[ext_resource type="Shader" uid="uid://7dir6o2yqbc1" path="res://shaders/block.gdshader" id="1_j0px4"]
+[ext_resource type="Script" uid="uid://dk45f8rai2gh1" path="res://scripts/broken_block.gd" id="3_my0fy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_my0fy"]
+shader = ExtResource("1_j0px4")
+shader_parameter/src_c1 = Color(0.498039, 0.0313726, 0, 1)
+shader_parameter/src_c2 = Color(0.811765, 0.309804, 0.0588235, 1)
+shader_parameter/src_c3 = Color(1, 0.596078, 0.247059, 1)
+shader_parameter/out_c1 = Color(0.498039, 0.0313726, 0, 1)
+shader_parameter/out_c2 = Color(0.811765, 0.309804, 0.0588235, 1)
+shader_parameter/out_c3 = Color(1, 0.596078, 0.247059, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j0px4"]
+atlas = ExtResource("1_7cud7")
+region = Rect2(0, 45, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_my0fy"]
+atlas = ExtResource("1_7cud7")
+region = Rect2(0, 54, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_svxg2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j0px4")
+}],
+"loop": true,
+"name": &"bigBlock",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_my0fy")
+}],
+"loop": true,
+"name": &"smallBlock",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("3_my0fy")
+
+[node name="BrokenBlockSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_my0fy")
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_svxg2")
+animation = &"smallBlock"
+
+[node name="flipTimer" type="Timer" parent="."]
+wait_time = 0.05
+autostart = true
+
+[connection signal="timeout" from="flipTimer" to="." method="_on_flip_timer_timeout"]

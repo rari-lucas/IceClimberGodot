@@ -1,0 +1,93 @@
+[gd_scene load_steps=12 format=3 uid="uid://cy72x21id5fxq"]
+
+[ext_resource type="Script" uid="uid://b00tx63f8r8s6" path="res://scripts/inimigo.gd" id="1_b3puo"]
+[ext_resource type="Texture2D" uid="uid://7d6huvifg8k" path="res://assets/topiSprite.png" id="2_8duf4"]
+[ext_resource type="AudioStream" uid="uid://dqoq4htnig6e8" path="res://sfx/16-topi_hit.mp3" id="3_0pvab"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwti0"]
+atlas = ExtResource("2_8duf4")
+region = Rect2(51, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpvpu"]
+atlas = ExtResource("2_8duf4")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atrij"]
+atlas = ExtResource("2_8duf4")
+region = Rect2(17, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8wg7f"]
+atlas = ExtResource("2_8duf4")
+region = Rect2(34, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qpegp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qwti0")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cpvpu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atrij")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8wg7f")
+}],
+"loop": true,
+"name": &"run",
+"speed": 11.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lsvoo"]
+size = Vector2(29.0386, 30.9411)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o3t64"]
+size = Vector2(64, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0pvab"]
+size = Vector2(64, 64)
+
+[node name="Inimigo" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_b3puo")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(1.90735e-06, -1.90735e-06)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_qpegp")
+animation = &"run"
+autoplay = "run"
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(-9.53674e-07, 4.00002)
+scale = Vector2(1.65297, 1.80989)
+shape = SubResource("RectangleShape2D_lsvoo")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 136
+
+[node name="HurtboxArea" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_o3t64")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 32
+
+[node name="HitboxArea" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_0pvab")
+
+[node name="DeathSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_0pvab")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
