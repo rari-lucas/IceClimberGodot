@@ -14,10 +14,8 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	
-	if velocity.x >= 0:
+	if velocity.x > 0:
 		$Sprite.flip_h = 1
-	else:
-		$Sprite.flip_h = 0 
 	
 	if is_on_floor():
 		if direcao == true:
@@ -41,6 +39,7 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Martelo":
 		hurt = true
 		SPEED = 125
+		GlobalSingleton.addScore("topi")
 		$Sprite.play("death")
 		$DeathSFX.play()
 		$Hitbox.set_collision_layer_value(5,false)

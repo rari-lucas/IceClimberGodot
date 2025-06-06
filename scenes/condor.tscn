@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://b02r5ri1h3ahq"]
+
+[ext_resource type="Script" uid="uid://chbiybcorfv4c" path="res://scripts/condor.gd" id="1_kk4la"]
+[ext_resource type="Texture2D" uid="uid://dpeabb74g4vsl" path="res://assets/condorSprite.png" id="2_es02j"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qy8yg"]
+atlas = ExtResource("2_es02j")
+region = Rect2(0, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w73vj"]
+atlas = ExtResource("2_es02j")
+region = Rect2(33, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fie7v"]
+atlas = ExtResource("2_es02j")
+region = Rect2(66, 0, 32, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8xe6y"]
+animations = [{
+"frames": [{
+"duration": 0.7,
+"texture": SubResource("AtlasTexture_qy8yg")
+}, {
+"duration": 0.7,
+"texture": SubResource("AtlasTexture_w73vj")
+}, {
+"duration": 0.7,
+"texture": SubResource("AtlasTexture_fie7v")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kk4la"]
+size = Vector2(128, 72)
+
+[node name="Condor" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 64
+script = ExtResource("1_kk4la")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_8xe6y")
+autoplay = "default"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 6.0
+autostart = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_kk4la")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -12,7 +12,12 @@ var confirm = false
 var maxHeight: float = 813
 var direction: float = 0
 var bonusStageReached: bool = false
+signal block_Hit(Vector2)
 signal current_Height_Changed(maxHeight)
+signal spawn_Bonus_Veggie()
+
+func _ready() -> void:
+	Engine.time_scale = 1
 
 func _physics_process(delta):
 	#region Ações do jogador
@@ -63,6 +68,12 @@ func _physics_process(delta):
 		if (position.x >= 1090):
 			position.x = -985
 	
+	#Ativa/desativa cabeaçda
+	if velocity.y < 0:
+		$Headbutt.set_collision_layer_value(7,true)
+	else:
+		$Headbutt.set_collision_layer_value(7,false)
+	
 	#Exporta para mapa para controlar a câmera.
 	if bonusStageReached == false:
 		if maxHeight >= global_position.y + 196:
@@ -73,8 +84,17 @@ func _physics_process(delta):
 			maxHeight = global_position.y
 			current_Height_Changed.emit(maxHeight)
 	
-	if (isActionable):
+	if isActionable:
 		velocity.y += gravity * delta
+		
+		if is_on_floor():
+			#puloAereo = 1
+			$Timers/AirTimer.stop()
+		
+		#Failsafe caso jogador spawne dentro do bloco
+		#TODO: configurar pontos de respawn 
+		#if !is_on_floor():
+			#$Timers/AirTimer.start()
 		move_and_slide()
 
 	#endregion
@@ -83,7 +103,6 @@ func _physics_process(delta):
 	if isActionable:
 	#Animação idle quando não há input ou após aterrissar.
 		if is_on_floor():
-			#puloAereo = 1
 			if (!Input.is_anything_pressed()) or (!Input.is_action_pressed("ataque") and direction == 0):
 				$Sprite.play("idle")
 		
@@ -157,18 +176,24 @@ func _on_respawn_timeout() -> void:
 	set_collision_layer_value(1,true)
 	confirm = false
 	$Timers/iFrames.start()
+	$Timers/AirTimer.start()
+	
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Hitbox" or area.name == "Deathzone":
-		isActionable = false
-		$Sprite.set_modulate(Color(255,255,255,1))
-		$AudioHandler/DeathSFXTimer.start()
-		set_collision_layer_value(1,false)
-		$Hurtbox.set_collision_mask_value(5,false)
-		$Hurtbox.set_collision_mask_value(8,false)
-		$Headbutt/HeadbuttArea.position.x = 10000
-		deathPos = position
-		$Timers/Respawn.start()
+		if bonusStageReached == false:
+			isActionable = false
+			$Sprite.set_modulate(Color(255,255,255,1))
+			$AudioHandler/DeathSFXTimer.start()
+			set_collision_layer_value(1,false)
+			$Hurtbox.set_collision_mask_value(5,false)
+			$Hurtbox.set_collision_mask_value(8,false)
+			$Headbutt/HeadbuttArea.position.x = 10000
+			deathPos = position
+			$Timers/Respawn.start()
+		else:
+			GlobalSingleton.victory = false
+			get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
 
 func _on_attack_cooldown_timeout() -> void:
 	$Sprite.offset.x = 0
@@ -197,4 +222,21 @@ func _on_bonus_timer_timeout() -> void:
 	if maxHeight <= -2650:
 		isActionable = true
 		bonusStageReached = true
+		spawn_Bonus_Veggie.emit()
 		get_parent().get_node("AudioHandler/BonusStageBGM").play()
+
+func _on_headbutt_body_entered(body: Node2D) -> void:
+	if body.name == "Condor":
+		GlobalSingleton.victory = true
+		Engine.time_scale = 0
+		get_parent().get_node("AudioHandler/BonusStageBGM").stop()
+		get_parent().get_node("AudioHandler/VictoryBGM").play()
+	if body.name == "Mapa":
+		block_Hit.emit($Headbutt/HeadbuttArea.global_position)
+
+func _on_victory_bgm_finished() -> void:
+	get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
+
+func _on_air_timer_timeout() -> void:
+	position.x = 0
+	position.y = maxHeight-150

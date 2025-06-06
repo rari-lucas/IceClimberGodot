@@ -7,6 +7,7 @@ var rng = RandomNumberGenerator.new()
 var direcao: int = 0
 
 func _ready() -> void:
+	$despawnTimer.start()
 	var parentNode = get_parent()
 	if (parentNode.tamanhoCelula == true):
 		$BrokenBlockSprite.play("bigBlock")
@@ -30,7 +31,7 @@ func _ready() -> void:
 		$BrokenBlockSprite.material.set("shader_parameter/out_c3",Vector4(1,0.6,0.25,1));
 
 func _physics_process(delta):
-	if position.y <= maxHeight:
+	if position.y <= maxHeight + 25:
 		maxHeightReached = true
 	
 	if direcao == 1:
@@ -49,3 +50,7 @@ func _on_flip_timer_timeout() -> void:
 		$BrokenBlockSprite.flip_h = false
 	else:
 		$BrokenBlockSprite.flip_h = true
+
+
+func _on_despawn_timer_timeout() -> void:
+	queue_free()

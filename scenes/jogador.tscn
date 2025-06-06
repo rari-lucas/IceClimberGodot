@@ -127,7 +127,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7lyf"]
-size = Vector2(100, 192)
+size = Vector2(85, 192)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ku41e"]
 size = Vector2(89, 256)
@@ -135,8 +135,8 @@ size = Vector2(89, 256)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uahlj"]
 size = Vector2(110, 199)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1ob3"]
-size = Vector2(145, 36)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_32758"]
+size = Vector2(107, 45.5)
 
 [node name="Jogador" type="CharacterBody2D"]
 collision_mask = 2
@@ -154,7 +154,7 @@ animation = &"jump"
 autoplay = "idle"
 
 [node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2(8, -8)
+position = Vector2(10.5, -8)
 shape = SubResource("RectangleShape2D_j7lyf")
 
 [node name="Martelo" type="Area2D" parent="."]
@@ -183,11 +183,11 @@ debug_color = Color(0.56367, 0.54669, 0.328717, 0.42)
 
 [node name="Headbutt" type="Area2D" parent="."]
 collision_layer = 64
-collision_mask = 0
+collision_mask = 14
 
 [node name="HeadbuttArea" type="CollisionShape2D" parent="Headbutt"]
-position = Vector2(9.5, -130)
-shape = SubResource("RectangleShape2D_g1ob3")
+position = Vector2(3.5, -168.25)
+shape = SubResource("RectangleShape2D_32758")
 
 [node name="AudioHandler" type="Node2D" parent="."]
 
@@ -218,10 +218,31 @@ one_shot = true
 wait_time = 0.05
 one_shot = true
 
+[node name="AirTimer" type="Timer" parent="Timers"]
+wait_time = 4.0
+one_shot = true
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -176.0
+offset_right = 60.0
+offset_bottom = -145.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.9, 0, 0.187, 1)
+
 [connection signal="timeout" from="Martelo/MarteloArea/AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="body_entered" from="Headbutt" to="." method="_on_headbutt_body_entered"]
 [connection signal="timeout" from="AudioHandler/DeathSFXTimer" to="." method="_on_death_sfx_timer_timeout"]
 [connection signal="timeout" from="Timers/Respawn" to="." method="_on_respawn_timeout"]
 [connection signal="timeout" from="Timers/iFrames" to="." method="_on_i_frames_timeout"]
 [connection signal="timeout" from="Timers/iFrameAnimTimer" to="." method="_on_i_frame_anim_timer_timeout"]
 [connection signal="timeout" from="Timers/BonusTimer" to="." method="_on_bonus_timer_timeout"]
+[connection signal="timeout" from="Timers/AirTimer" to="." method="_on_air_timer_timeout"]
