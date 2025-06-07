@@ -1,13 +1,15 @@
 extends TileMapLayer
+var headbuttPos: Vector2i = Vector2i(0,0)
 var celula_atual: Vector2i
-var celulaEsquerda: Vector2i
+var celula_left: Vector2i
+var celula_right: Vector2i
 var celulaDeathzone: Vector2i
 var vegetables: Array
 var currentVeggie: Vector2 = Vector2(randi_range(0,4),randi_range(0,1))
 signal celulaDestruida(celulaAtingida)
 signal blocoGrande(bool)
 @onready var blockAnimation = preload("res://scenes/broken_block.tscn")
-@onready var loadedPlayer = get_parent().get_parent().get_node("Jogador")
+@onready var loadedPlayer = $"../../Jogador"
 
 func _ready() -> void:
 	$Deathzone.global_position.y = 1005
@@ -18,21 +20,28 @@ func _ready() -> void:
 		i += 1
 
 func _physics_process(_delta):
-	celula_atual = local_to_map(to_local(loadedPlayer.get_node("Headbutt/HeadbuttArea").global_position))
+	celula_atual = local_to_map(to_local(Vector2i(headbuttPos.x,headbuttPos.y)))
+	celula_left = local_to_map(to_local(Vector2i(headbuttPos.x - 30,headbuttPos.y)))
+	celula_right = local_to_map(to_local(Vector2i(headbuttPos.x + 20,headbuttPos.y)))
 	if get_cell_tile_data(celula_atual):
 		if (get_cell_source_id(celula_atual) == 2 
 		and get_cell_atlas_coords(celula_atual).y in[0,1,2]):
 			_block_hit(celula_atual)
 	
+	if get_cell_tile_data(celula_left):
+		if (get_cell_source_id(celula_left) == 2 
+		and get_cell_atlas_coords(celula_left).y in[0,1,2]):
+			_block_hit(celula_left)
+	
+	if get_cell_tile_data(celula_right):
+		if (get_cell_source_id(celula_right) == 2 
+		and get_cell_atlas_coords(celula_right).y in[0,1,2]):
+			_block_hit(celula_right)
+	
 	var celula_veggie = local_to_map(to_local(loadedPlayer.global_position))
 	if get_cell_tile_data(celula_veggie):
 		if (get_cell_source_id(celula_veggie) == 1):
 			_get_veggie(celula_veggie)
-	#celulaEsquerda = local_to_map(to_local(loadedPlayer.get_node("Headbutt2/HeadbuttArea").global_position))
-	#if get_cell_tile_data(celulaEsquerda):
-		#if (get_cell_source_id(celulaEsquerda) == 2 
-		#and get_cell_atlas_coords(celulaEsquerda).y in[0,1,2]):
-			#_block_hit(celulaEsquerda)
 
 func _block_hit(celula_atingida) -> void:
 	GlobalSingleton.addScore("block")
@@ -76,9 +85,9 @@ func _on_jogador_spawn_bonus_veggie() -> void:
 
 
 func _on_jogador_block_hit(celulaAtual: Variant) -> void:
-	
-	var celulaAtualMap = local_to_map(to_local(celulaAtual))
-	if get_cell_tile_data(celulaAtualMap):
-		if (get_cell_source_id(celulaAtualMap) == 2 
-		and get_cell_atlas_coords(celulaAtualMap).y in[0,1,2]):
-			_block_hit(celulaAtualMap)
+	headbuttPos = celulaAtual
+	#var celulaAtualMap = local_to_map(to_local(celulaAtual))
+	#if get_cell_tile_data(celulaAtualMap):
+		#if (get_cell_source_id(celulaAtualMap) == 2 
+		#and get_cell_atlas_coords(celulaAtualMap).y in[0,1,2]):
+			#_block_hit(celulaAtualMap)

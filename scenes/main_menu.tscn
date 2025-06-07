@@ -18,7 +18,7 @@ font_size = 50
 
 [sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
 font_size = 50
-font_color = Color(0.820792, 0, 0.0678411, 1)
+font_color = Color(0.752941, 0.87451, 1, 1)
 
 [node name="main_menu" type="Control"]
 layout_mode = 3
@@ -106,17 +106,18 @@ text = "1"
 label_settings = SubResource("LabelSettings_bqqt6")
 horizontal_alignment = 1
 
-[node name="ErrorMessage" type="Label" parent="."]
-visible = false
+[node name="Message" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1205.0
-offset_top = 802.0
+offset_top = 745.0
 offset_right = 1605.0
-offset_bottom = 907.0
-text = "FASE NAO
-EXISTE!"
+offset_bottom = 981.0
+pivot_offset = Vector2(682, 607)
+text = "DEFAULT"
 label_settings = SubResource("LabelSettings_wu84c")
 horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Level" to="." method="_on_level_pressed"]

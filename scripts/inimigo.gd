@@ -38,7 +38,7 @@ func _physics_process(delta):
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Martelo":
 		hurt = true
-		SPEED = 125
+		SPEED = SPEED/2
 		GlobalSingleton.addScore("topi")
 		$Sprite.play("death")
 		$DeathSFX.play()

@@ -136,7 +136,7 @@ size = Vector2(89, 256)
 size = Vector2(110, 199)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_32758"]
-size = Vector2(107, 45.5)
+size = Vector2(88, 59.25)
 
 [node name="Jogador" type="CharacterBody2D"]
 collision_mask = 2
@@ -173,7 +173,7 @@ wait_time = 0.25
 one_shot = true
 
 [node name="Hurtbox" type="Area2D" parent="."]
-collision_layer = 32
+collision_layer = 40
 collision_mask = 152
 
 [node name="HurtboxArea" type="CollisionShape2D" parent="Hurtbox"]
@@ -186,7 +186,7 @@ collision_layer = 64
 collision_mask = 14
 
 [node name="HeadbuttArea" type="CollisionShape2D" parent="Headbutt"]
-position = Vector2(3.5, -168.25)
+position = Vector2(29, -173)
 shape = SubResource("RectangleShape2D_32758")
 
 [node name="AudioHandler" type="Node2D" parent="."]

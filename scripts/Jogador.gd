@@ -12,6 +12,7 @@ var confirm = false
 var maxHeight: float = 813
 var direction: float = 0
 var bonusStageReached: bool = false
+var checkpointYPos: float
 signal block_Hit(Vector2)
 signal current_Height_Changed(maxHeight)
 signal spawn_Bonus_Veggie()
@@ -62,17 +63,23 @@ func _physics_process(delta):
 	
 	#region Física do personagem
 	#teleporta jogador ao chegar no fim da tela
-		if (position.x <= -1065):
-			position.x = 960
-		
-		if (position.x >= 1090):
-			position.x = -985
+	if (position.x <= -1065):
+		position.x = 960
+	
+	if (position.x >= 1090):
+		position.x = -985
+
+	#Exporta cabeçada para quebra de blocos
+	if ($Headbutt.overlaps_body($"../MapHandler/Mapa")):
+		block_Hit.emit($Headbutt/HeadbuttArea.global_position)
 	
 	#Ativa/desativa cabeaçda
 	if velocity.y < 0:
-		$Headbutt.set_collision_layer_value(7,true)
+		$Headbutt.set_collision_mask_value(2,true)
+		$Headbutt.set_collision_mask_value(3,true)
 	else:
-		$Headbutt.set_collision_layer_value(7,false)
+		$Headbutt.set_collision_mask_value(2,false)
+		$Headbutt.set_collision_mask_value(3,false)
 	
 	#Exporta para mapa para controlar a câmera.
 	if bonusStageReached == false:
@@ -91,12 +98,7 @@ func _physics_process(delta):
 			#puloAereo = 1
 			$Timers/AirTimer.stop()
 		
-		#Failsafe caso jogador spawne dentro do bloco
-		#TODO: configurar pontos de respawn 
-		#if !is_on_floor():
-			#$Timers/AirTimer.start()
 		move_and_slide()
-
 	#endregion
 	
 	#region Animações do personagem
@@ -135,8 +137,11 @@ func _physics_process(delta):
 	#endregion
 	
 	#region Conclusão de fase
+	#var teste1 = $Hurtbox.overlaps_area(get_parent().get_node("MapHandler/Mapa/BonusZone"))
+	#var teste2 = maxHeight #error
+	#var teste3 = is_on_floor()
 	if ($Hurtbox.overlaps_area(get_parent().get_node("MapHandler/Mapa/BonusZone")) == true
-	and is_on_floor() and maxHeight > -2400 and isActionable):
+	and is_on_floor() and !bonusStageReached and isActionable):
 		get_parent().get_node("AudioHandler/StageBGM").stop()
 		_bonus_Stage_Start()
 	#endregion
@@ -171,7 +176,7 @@ func _on_respawn_timeout() -> void:
 	$Sprite.rotation = 0
 	isActionable = true
 	position.x = 0
-	position.y = maxHeight-10
+	global_position.y = checkpointYPos
 	$Headbutt/HeadbuttArea.position.x = 0
 	set_collision_layer_value(1,true)
 	confirm = false
@@ -194,6 +199,9 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		else:
 			GlobalSingleton.victory = false
 			get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
+	if area.name == "Checkpoint":
+		checkpointYPos = area.get_child(0).global_position.y
+		area.position.y = area.position.y - 48
 
 func _on_attack_cooldown_timeout() -> void:
 	$Sprite.offset.x = 0
@@ -215,11 +223,11 @@ func _on_death_sfx_timer_timeout() -> void:
 	$AudioHandler/DeathSFX.play()
 
 func _on_bonus_timer_timeout() -> void:
-	if maxHeight > -2650:
-		maxHeight += -30
+	if maxHeight > -2500:
+		maxHeight += -10
 		current_Height_Changed.emit(maxHeight)
 		_bonus_Stage_Start()
-	if maxHeight <= -2650:
+	if maxHeight <= -2500:
 		isActionable = true
 		bonusStageReached = true
 		spawn_Bonus_Veggie.emit()
@@ -231,8 +239,6 @@ func _on_headbutt_body_entered(body: Node2D) -> void:
 		Engine.time_scale = 0
 		get_parent().get_node("AudioHandler/BonusStageBGM").stop()
 		get_parent().get_node("AudioHandler/VictoryBGM").play()
-	if body.name == "Mapa":
-		block_Hit.emit($Headbutt/HeadbuttArea.global_position)
 
 func _on_victory_bgm_finished() -> void:
 	get_tree().change_scene_to_file("res://scenes/result_screen.tscn")
