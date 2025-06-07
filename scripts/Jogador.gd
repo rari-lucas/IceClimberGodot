@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 var SPEED = 200.0
-const JUMP_VELOCITY = -775.0
+var JUMP_VELOCITY = -775.0
 #var puloAereo = 0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var globalTimer: float = 0
@@ -13,12 +13,22 @@ var maxHeight: float = 813
 var direction: float = 0
 var bonusStageReached: bool = false
 var checkpointYPos: float
+var checkpointXPos: float
+var allowRun: bool = false
 signal block_Hit(Vector2)
 signal current_Height_Changed(maxHeight)
 signal spawn_Bonus_Veggie()
 
 func _ready() -> void:
 	Engine.time_scale = 1
+	_stage_variants(GlobalSingleton.currentStage)
+
+func _stage_variants(currentStage):
+	match currentStage:
+		2:
+			allowRun = true
+		_:
+			pass
 
 func _physics_process(delta):
 	#region Ações do jogador
@@ -27,7 +37,7 @@ func _physics_process(delta):
 		
 		#Movimento do personagem
 		if direction:
-			if Input.is_action_pressed('correr'):
+			if Input.is_action_pressed('correr') and allowRun:
 				velocity.x = direction * (SPEED + 500)
 			else:
 				velocity.x = direction * SPEED
@@ -182,7 +192,6 @@ func _on_respawn_timeout() -> void:
 	confirm = false
 	$Timers/iFrames.start()
 	$Timers/AirTimer.start()
-	
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Hitbox" or area.name == "Deathzone":

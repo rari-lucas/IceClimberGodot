@@ -5,6 +5,7 @@ var blockScore: int = 0
 var topiScore: int = 0
 var birdScore: int = 0
 var veggieScore: int = 0
+var currentStage: int = 1
 
 func addScore(target):
 	match target:

@@ -7,6 +7,9 @@ var hurtTimer: float = 0
 var direcao: bool = false
 var testeSpawn: bool = false
 
+func _ready():
+	_stage_variants(GlobalSingleton.currentStage)
+
 func _physics_process(delta):
 	if testeSpawn == false:
 		_direcao_apos_spawn()
@@ -51,3 +54,10 @@ func _direcao_apos_spawn():
 	if position.x > 0:
 		direcao = true
 	testeSpawn = true
+
+func _stage_variants(currentStage):
+	match currentStage:
+		2:
+			SPEED = randi_range(100,500)
+		_:
+			pass

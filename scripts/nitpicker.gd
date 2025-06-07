@@ -4,10 +4,11 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var hurt: bool = false
 var hurtTimer: float = 0
 var currentPos = global_position.x
-const SPEED = 200
+var SPEED = 200
 @onready var path_follow = $".."
 
 func _ready():
+	_stage_variants(GlobalSingleton.currentStage == 2)
 	path_follow.progress = 0
 
 func _physics_process(delta):
@@ -39,3 +40,10 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		$Hurtbox.set_collision_mask_value(4,false)
 	elif area.name == "Deathzone":
 		queue_free()
+
+func _stage_variants(currentStage):
+	match currentStage:
+		2:
+			SPEED = randi_range(100,500)
+		_:
+			pass
