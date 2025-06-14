@@ -6,6 +6,16 @@ var hurt: bool = false
 var hurtTimer: float = 0
 var direcao: bool = false
 
+func _ready():
+	_stage_variants(GlobalSingleton.currentStage)
+
+func _stage_variants(currentStage):
+	match currentStage:
+		8:
+			SPEED = 1500
+		_:
+			pass
+
 func _physics_process(_delta):
 	if velocity.x >= 0:
 		$Sprite.flip_h = 1

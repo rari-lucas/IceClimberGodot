@@ -8,8 +8,15 @@ var SPEED = 200
 @onready var path_follow = $".."
 
 func _ready():
-	_stage_variants(GlobalSingleton.currentStage == 2)
+	_stage_variants(GlobalSingleton.currentStage)
 	path_follow.progress = 0
+
+func _stage_variants(currentStage):
+	match currentStage:
+		8:
+			SPEED = 500
+		_:
+			pass
 
 func _physics_process(delta):
 	path_follow.progress += SPEED * delta 
@@ -18,6 +25,9 @@ func _physics_process(delta):
 	else:
 		$Sprite.flip_h = false
 	currentPos = global_position.x
+	
+	if global_position.x >= 1000:
+		queue_free()
 	
 	if hurt:
 		global_position.y = global_position.y + 5
@@ -33,17 +43,13 @@ func _physics_process(delta):
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Martelo" or area.name == "Headbutt":
 		hurt = true
-		GlobalSingleton.addScore("bird")
+		if area.get_parent().name.contains("2"):
+			GlobalSingleton._add_score("bird2")
+		else:
+			GlobalSingleton._add_score("bird")
 		$Sprite.play("death")
 		$DeathSFX.play()
 		$Hitbox.set_collision_layer_value(5,false)
 		$Hurtbox.set_collision_mask_value(4,false)
 	elif area.name == "Deathzone":
 		queue_free()
-
-func _stage_variants(currentStage):
-	match currentStage:
-		2:
-			SPEED = randi_range(100,500)
-		_:
-			pass

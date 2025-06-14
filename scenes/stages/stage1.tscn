@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://ginh8sigqbrt"]
+[gd_scene load_steps=26 format=4 uid="uid://ginh8sigqbrt"]
 
 [ext_resource type="Texture2D" uid="uid://c2t1f4mxsr8wd" path="res://assets/vegetablesSprite.png" id="2_003fr"]
 [ext_resource type="PackedScene" uid="uid://m4xljo4oeqav" path="res://scenes/jogador.tscn" id="2_cr1p7"]
@@ -115,12 +115,6 @@ _data = {
 }
 point_count = 25
 
-[sub_resource type="LabelSettings" id="LabelSettings_6pk31"]
-font_size = 25
-
-[sub_resource type="LabelSettings" id="LabelSettings_cr1p7"]
-font_size = 25
-
 [node name="CenaMain" type="Node2D"]
 light_mask = 2
 
@@ -170,6 +164,27 @@ position = Vector2(-289, -3062)
 
 [node name="brokenBlockInst" type="Node2D" parent="MapHandler"]
 script = ExtResource("9_ujl0k")
+
+[node name="Jogador" parent="." instance=ExtResource("2_cr1p7")]
+position = Vector2(-123, 806)
+
+[node name="Camera2D" type="Camera2D" parent="Jogador"]
+position = Vector2(0, -264)
+limit_left = -975
+limit_right = 945
+limit_bottom = 900
+limit_smoothed = true
+drag_left_margin = 1.0
+drag_top_margin = 1.0
+drag_right_margin = 1.0
+drag_bottom_margin = 1.0
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource("3_pog00")
+
+[node name="SubViewport" type="CanvasLayer" parent="Jogador/Camera2D"]
+
+[node name="PauseMenu" parent="Jogador/Camera2D/SubViewport" instance=ExtResource("4_g4b0s")]
 
 [node name="EnemyHandler" type="Node2D" parent="."]
 position = Vector2(-19, -2089)
@@ -230,64 +245,14 @@ stream = ExtResource("15_6pk31")
 [node name="BirdSpawnSFX" type="AudioStreamPlayer" parent="AudioHandler"]
 stream = ExtResource("16_cr1p7")
 
-[node name="Jogador" parent="." instance=ExtResource("2_cr1p7")]
-position = Vector2(-63, 747)
-scale = Vector2(0.385293, 0.385293)
-
-[node name="Camera2D" type="Camera2D" parent="Jogador"]
-position = Vector2(-41.5268, -633.284)
-limit_left = -975
-limit_right = 945
-limit_bottom = 900
-limit_smoothed = true
-drag_left_margin = 1.0
-drag_top_margin = 1.0
-drag_right_margin = 1.0
-drag_bottom_margin = 1.0
-editor_draw_limits = true
-editor_draw_drag_margin = true
-script = ExtResource("3_pog00")
-
-[node name="SubViewport" type="CanvasLayer" parent="Jogador/Camera2D"]
-
-[node name="Control" type="Control" parent="Jogador/Camera2D/SubViewport"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -1.0
-offset_top = 1.0
-offset_right = 2579.92
-offset_bottom = 1146.88
-size_flags_horizontal = 0
-size_flags_vertical = 0
-
-[node name="Score" type="Label" parent="Jogador/Camera2D/SubViewport/Control"]
-texture_filter = 1
-layout_mode = 0
-offset_left = 157.0
-offset_top = 4.0
-offset_right = 237.0
-offset_bottom = 30.0
-text = "0"
-label_settings = SubResource("LabelSettings_6pk31")
-
-[node name="ScoreLabel" type="Label" parent="Jogador/Camera2D/SubViewport/Control"]
-texture_filter = 1
-layout_mode = 0
-offset_left = 6.0
-offset_top = 4.0
-offset_right = 156.0
-offset_bottom = 30.0
-text = "SCORE:"
-label_settings = SubResource("LabelSettings_cr1p7")
-
-[node name="PauseMenu" parent="Jogador/Camera2D/SubViewport" instance=ExtResource("4_g4b0s")]
-
 [node name="Condor" parent="." instance=ExtResource("16_0e4co")]
 position = Vector2(175, -4009)
 
 [connection signal="blocoGrande" from="MapHandler/Mapa" to="MapHandler/brokenBlockInst" method="_on_mapa_bloco_grande"]
 [connection signal="celulaDestruida" from="MapHandler/Mapa" to="MapHandler/brokenBlockInst" method="_on_mapa_celula_destruida"]
-[connection signal="finished" from="AudioHandler/VictoryBGM" to="Jogador" method="_on_victory_bgm_finished"]
 [connection signal="block_Hit" from="Jogador" to="MapHandler/Mapa" method="_on_jogador_block_hit"]
 [connection signal="current_Height_Changed" from="Jogador" to="MapHandler/Mapa" method="_on_jogador_current_height_changed"]
 [connection signal="spawn_Bonus_Veggie" from="Jogador" to="MapHandler/Mapa" method="_on_jogador_spawn_bonus_veggie"]
+[connection signal="spawn_Bonus_Veggie" from="Jogador" to="EnemyHandler/BirdSpawner" method="_on_jogador_spawn_bonus_veggie"]
+[connection signal="unlockCell" from="Jogador" to="MapHandler/Mapa" method="_on_jogador_unlock_cell"]
+[connection signal="finished" from="AudioHandler/VictoryBGM" to="Jogador" method="_on_victory_bgm_finished"]

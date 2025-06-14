@@ -1,0 +1,101 @@
+[gd_scene load_steps=13 format=3 uid="uid://c3fir0mqrhesw"]
+
+[ext_resource type="Script" uid="uid://cdmvll5pd8j3v" path="res://scripts/ice_spike.gd" id="1_ljugv"]
+[ext_resource type="Texture2D" uid="uid://negcgqy56oqi" path="res://assets/fallingIceSprite.png" id="1_sq37h"]
+[ext_resource type="AudioStream" uid="uid://c2durh4ip61wh" path="res://sfx/09-icicle_fall.mp3" id="3_bfsr4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tev1l"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(9, 16, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p5y4w"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(18, 16, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfsr4"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(18, 0, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nwmiv"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(0, 0, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxsmm"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(9, 0, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4e8k"]
+atlas = ExtResource("1_sq37h")
+region = Rect2(18, 0, 8, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tev1l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tev1l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p5y4w")
+}],
+"loop": true,
+"name": &"destroyed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfsr4")
+}],
+"loop": true,
+"name": &"fall",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nwmiv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxsmm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4e8k")
+}],
+"loop": false,
+"name": &"freezing",
+"speed": 0.8
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ljugv"]
+size = Vector2(32, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bfsr4"]
+size = Vector2(32, 48)
+
+[node name="IceSpike" type="StaticBody2D"]
+texture_filter = 1
+collision_layer = 20
+collision_mask = 33
+script = ExtResource("1_ljugv")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_tev1l")
+animation = &"destroyed"
+autoplay = "freezing"
+
+[node name="Colisao" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_ljugv")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 20
+collision_mask = 33
+
+[node name="HitboxArea" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_bfsr4")
+
+[node name="FallSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_bfsr4")
+
+[connection signal="animation_finished" from="Sprite" to="." method="_on_sprite_animation_finished"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

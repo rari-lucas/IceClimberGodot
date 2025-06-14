@@ -6,9 +6,19 @@ var hurt: bool = false
 var hurtTimer: float = 0
 var direcao: bool = false
 var testeSpawn: bool = false
+var isP2 = ""
 
 func _ready():
 	_stage_variants(GlobalSingleton.currentStage)
+
+func _stage_variants(currentStage):
+	match currentStage:
+		3:
+			isP2 = "2"
+		8:
+			SPEED = randi_range(100,500)
+		_:
+			pass
 
 func _physics_process(delta):
 	if testeSpawn == false:
@@ -42,7 +52,10 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.name == "Martelo":
 		hurt = true
 		SPEED = SPEED/2
-		GlobalSingleton.addScore("topi")
+		if area.get_parent().name.contains("2"):
+			GlobalSingleton._add_score("topi2")
+		else:
+			GlobalSingleton._add_score("topi")
 		$Sprite.play("death")
 		$DeathSFX.play()
 		$Hitbox.set_collision_layer_value(5,false)
@@ -54,10 +67,3 @@ func _direcao_apos_spawn():
 	if position.x > 0:
 		direcao = true
 	testeSpawn = true
-
-func _stage_variants(currentStage):
-	match currentStage:
-		2:
-			SPEED = randi_range(100,500)
-		_:
-			pass

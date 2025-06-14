@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://m4xljo4oeqav"]
+[gd_scene load_steps=35 format=3 uid="uid://m4xljo4oeqav"]
 
 [ext_resource type="Script" uid="uid://ccpgmqr4c8smv" path="res://scripts/Jogador.gd" id="1_anlb5"]
 [ext_resource type="Texture2D" uid="uid://bubq64k4ebr7o" path="res://assets/playerSprite.png" id="2_cbomr"]
@@ -6,10 +6,12 @@
 [ext_resource type="AudioStream" uid="uid://bngwxsa7qm3dx" path="res://sfx/13-death.mp3" id="3_g1ob3"]
 [ext_resource type="AudioStream" uid="uid://dvpmw5aioy3gh" path="res://sfx/15-jump.mp3" id="4_qcln2"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_32758"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s760d"]
 shader = ExtResource("2_s760d")
 shader_parameter/find_color = Color(0.0509804, 0.301961, 0.768627, 1)
 shader_parameter/target_color = Color(0.615686, 0.109804, 0.282353, 1)
+shader_parameter/find_color2 = Color(0.890196, 0.52549, 0.345098, 1)
+shader_parameter/target_color2 = Color(0.890196, 0.52549, 0.345098, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idw05"]
 atlas = ExtResource("2_cbomr")
@@ -39,6 +41,14 @@ region = Rect2(0, 0, 21, 32)
 atlas = ExtResource("2_cbomr")
 region = Rect2(110, 0, 21, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_xgmh7"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(132, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg4ar"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(154, 33, 21, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_wqdkg"]
 atlas = ExtResource("2_cbomr")
 region = Rect2(22, 0, 21, 32)
@@ -51,9 +61,49 @@ region = Rect2(44, 0, 21, 32)
 atlas = ExtResource("2_cbomr")
 region = Rect2(66, 0, 21, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_1lopk"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(176, 33, 21, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_rdeuo"]
 atlas = ExtResource("2_cbomr")
 region = Rect2(88, 0, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s760d"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(110, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_32758"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(88, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lj65x"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(0, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7p4t"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(110, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gwte"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(22, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jl1eh"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(44, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vvn6l"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(66, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jdrue"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(176, 33, 21, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6c6tx"]
+atlas = ExtResource("2_cbomr")
+region = Rect2(198, 33, 21, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jml58"]
 animations = [{
@@ -105,6 +155,17 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_xgmh7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg4ar")
+}],
+"loop": true,
+"name": &"lose",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_wqdkg")
 }, {
 "duration": 1.0,
@@ -119,24 +180,89 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_1lopk")
+}],
+"loop": true,
+"name": &"spawnSeal",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_rdeuo")
 }],
 "loop": true,
 "name": &"stop",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s760d")
+}],
+"loop": true,
+"name": &"unarmed_attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_32758")
+}],
+"loop": true,
+"name": &"unarmed_fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lj65x")
+}],
+"loop": true,
+"name": &"unarmed_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7p4t")
+}],
+"loop": true,
+"name": &"unarmed_jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8gwte")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jl1eh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vvn6l")
+}],
+"loop": true,
+"name": &"unarmed_run",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jdrue")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6c6tx")
+}],
+"loop": true,
+"name": &"win",
+"speed": 1.5
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7lyf"]
-size = Vector2(85, 192)
+size = Vector2(36, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ku41e"]
-size = Vector2(89, 256)
+size = Vector2(56, 103)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uahlj"]
-size = Vector2(110, 199)
+size = Vector2(48, 81)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_32758"]
-size = Vector2(88, 59.25)
+size = Vector2(36, 15.5)
 
 [node name="Jogador" type="CharacterBody2D"]
 collision_mask = 2
@@ -145,24 +271,24 @@ script = ExtResource("1_anlb5")
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
-material = SubResource("ShaderMaterial_32758")
-use_parent_material = true
-position = Vector2(8, -72)
-scale = Vector2(10, 10)
+material = SubResource("ShaderMaterial_s760d")
+position = Vector2(-2, -24)
+scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_jml58")
 animation = &"jump"
 autoplay = "idle"
 
 [node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2(10.5, -8)
+position = Vector2(-2, 0)
 shape = SubResource("RectangleShape2D_j7lyf")
 
 [node name="Martelo" type="Area2D" parent="."]
-position = Vector2(0, -16)
+position = Vector2(-11, 29)
 collision_layer = 8
 collision_mask = 4
 
 [node name="MarteloArea" type="CollisionShape2D" parent="Martelo"]
+position = Vector2(11, -40.5)
 shape = SubResource("RectangleShape2D_ku41e")
 disabled = true
 debug_color = Color(0.972549, 0, 0, 0.419608)
@@ -177,7 +303,7 @@ collision_layer = 40
 collision_mask = 152
 
 [node name="HurtboxArea" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(12, -12.5)
+position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_uahlj")
 debug_color = Color(0.56367, 0.54669, 0.328717, 0.42)
 
@@ -186,7 +312,7 @@ collision_layer = 64
 collision_mask = 14
 
 [node name="HeadbuttArea" type="CollisionShape2D" parent="Headbutt"]
-position = Vector2(29, -173)
+position = Vector2(-2, -49)
 shape = SubResource("RectangleShape2D_32758")
 
 [node name="AudioHandler" type="Node2D" parent="."]
@@ -211,7 +337,7 @@ wait_time = 2.5
 one_shot = true
 
 [node name="iFrameAnimTimer" type="Timer" parent="Timers"]
-wait_time = 0.25
+wait_time = 0.05
 one_shot = true
 
 [node name="BonusTimer" type="Timer" parent="Timers"]
@@ -222,20 +348,7 @@ one_shot = true
 wait_time = 4.0
 one_shot = true
 
-[node name="ReferenceRect" type="ReferenceRect" parent="."]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -52.0
-offset_top = -176.0
-offset_right = 60.0
-offset_bottom = -145.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.9, 0, 0.187, 1)
+[node name="SealHandler" type="Node2D" parent="."]
 
 [connection signal="timeout" from="Martelo/MarteloArea/AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

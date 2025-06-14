@@ -26,7 +26,6 @@ func pauseMenu():
 	paused = !paused
 
 func _on_resume_pressed() -> void:
-	
 	$PauseSFX.play()
 	hide()
 	Engine.time_scale = 1

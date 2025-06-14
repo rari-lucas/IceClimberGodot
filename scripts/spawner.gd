@@ -8,24 +8,24 @@ var unloaded: bool = false
 
 func _ready() -> void:
 	cameraStartPos = $"../../Jogador".global_position.y
-	$Timer.wait_time = rng.randi_range(6,12)
+	$Timer.wait_time = rng.randi_range(5,12)
 	$Timer.start()
 	$BirdTimer.wait_time = rng.randi_range(15,20)
 	$BirdTimer.start()
 
 func _physics_process(_delta):
 	if get_name().contains("1"):
-		global_position.y = get_parent().get_parent().get_node("Jogador").global_position.y-392
+		global_position.y = get_parent().get_parent().get_node("Jogador").checkpointYPos-392
 	elif get_name().contains("2"):
-		global_position.y = get_parent().get_parent().get_node("Jogador").global_position.y
+		global_position.y = get_parent().get_parent().get_node("Jogador").checkpointYPos
 	elif get_name().contains("3"):
-		global_position.y = get_parent().get_parent().get_node("Jogador").global_position.y+196
+		global_position.y = get_parent().get_parent().get_node("Jogador").checkpointYPos+196
 	#elif get_name().contains("Bird"):
 		#global_position = $"../../Jogador/Camera2D".global_position
 		
 	#$"../Path2D/PathFollow2D".v_offset = (cameraStartPos - $"../../Jogador".global_position.y) * -1
-
-	if global_position.y <= -2000:
+	
+	if global_position.y <= -2100:
 		_unload()
 
 func _unload():
@@ -44,7 +44,7 @@ func _on_timer_timeout() -> void:
 			ene.position = position
 			$"../Inimigos".add_child(ene)
 			rng.randomize()
-			$Timer.wait_time = rng.randi_range(6,12)
+			$Timer.wait_time = rng.randi_range(5,12)
 
 func _on_bird_timer_timeout() -> void:
 	if unloaded == false:
@@ -54,7 +54,10 @@ func _on_bird_timer_timeout() -> void:
 			path_follow.rotates = false
 			var ene = bird.instantiate()
 			path_follow.add_child(ene)
-			path_follow.v_offset = (cameraStartPos - $"../../Jogador".global_position.y) * -1
+			path_follow.v_offset = (cameraStartPos - $"../../Jogador".checkpointYPos) * -1
 			ene.position = position 
 			$"../Path2D".add_child(path_follow)
 			$BirdTimer.wait_time = rng.randi_range(15,20)
+
+func _on_jogador_spawn_bonus_veggie() -> void:
+	_unload()
